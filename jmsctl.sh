@@ -124,14 +124,17 @@ function check_update() {
 }
 
 function main() {
-  if [[ "${action}" == "help" || "${action}" == "h" || "${action}" == "-h" || "${action}" == "--help" ]]; then
+
+  case "${action}" in
+  help|h|-h|--help|install|reconfig)
     echo ""
-  elif [[ "${action}" == "install" || "${action}" == "reconfig" ]]; then
-    echo ""
-  else
+    ;;
+  *)
     pre_check || return 3
     EXE=$(get_docker_compose_cmd_line)
-  fi
+    ;;
+  esac
+  
   case "${action}" in
   install)
     bash "${SCRIPT_DIR}/4_install_jumpserver.sh"
@@ -145,17 +148,8 @@ function main() {
   reconfig)
     bash "${SCRIPT_DIR}/1_config_jumpserver.sh"
     ;;
-  start)
-    start
-    ;;
-  restart)
-    restart
-    ;;
-  stop)
-    stop
-    ;;
-  close)
-    close
+  start|stop|restart|close)
+    ${action}
     ;;
   status)
     ${EXE} ps
@@ -203,13 +197,7 @@ function main() {
   raw)
     ${EXE} "${args[@]:1}"
     ;;
-  help)
-    usage
-    ;;
-  --help)
-    usage
-    ;;
-  -h)
+  help|--help|-h|h)
     usage
     ;;
   *)
