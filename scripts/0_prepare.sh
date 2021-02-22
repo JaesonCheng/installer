@@ -17,7 +17,6 @@ function prepare_config() {
 function prepare_docker_bin() {
   md5_matched=$(check_md5 /tmp/docker.tar.gz "${DOCKER_MD5}")
   if [[ ! -f /tmp/docker.tar.gz || "${md5_matched}" != "1" ]]; then
-    prepare_online_install_required_pkg
     get_file_md5 /tmp/docker.tar.gz
     echo "$(gettext -s 'Starting to download Docker engine') ..."
     wget "${DOCKER_BIN_URL}" -O /tmp/docker.tar.gz
